@@ -1,25 +1,32 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
+import { useEffect, useState } from "react";
 import "./App.css";
+import UrlShortForm from "./assets/components/url-short-form";
 
 function App() {
-  const [count, setCount] = useState(0);
+  useEffect(() => {
+    // Check if the current path is a key in the map of shortened URLs
+    const path = window.location.pathname.replace("/", "");
+    // get shortened url from localStorage
+    const shortenedUrls = JSON.parse(
+      localStorage.getItem("shortenedUrls") || "[]"
+    );
+
+    // if the current path is a key in the map of shortened URLs
+    if (shortenedUrls[path]) {
+      // redirect to the URL value
+      window.location.href = shortenedUrls[path];
+    }
+    if (shortenedUrls.hasOwnProperty(path)) {
+      // Redirect to the corresponding URL
+      window.location.href = shortenedUrls[path];
+    }
+  }, []);
 
   return (
     <div className="App">
-      <div></div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+      <div>
+        <UrlShortForm />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   );
 }
